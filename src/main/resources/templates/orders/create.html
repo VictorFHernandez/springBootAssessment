@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
 	<title>Create Orders From Page</title>
 </head>
 <body>
-<h1>crete form</h1>
+<h1>Create a Order</h1>
+
+<!--says that it can't resolve what is in the th:object and the th:fields and i don't know why -->
+
+<div class="container">
+<form th:action="@{/orders/create}" th:method="post" th:object="${order}">
+	Email:
+	<label>
+		<input name="email" th:field="*{order.email}" />
+	</label>
+	<br/>
+	Total_price:
+	<label>
+		<input name="total_price" th:field="*{total_price}" />
+	</label>
+	<br/>
+	<input type="submit" />
+</form>
+</div>
+
 </body>
 </html>

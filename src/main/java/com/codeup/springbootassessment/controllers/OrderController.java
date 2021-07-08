@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class OrderController {
-    private OrderRepository orderDao;
+    private final OrderRepository orderDao;
 
     public OrderController(OrderRepository orderDao){
         this.orderDao = orderDao;
@@ -18,31 +18,46 @@ public class OrderController {
     @ResponseBody
     public String showCreateOrderForm(Model model){
         model.addAttribute("order", new Order());
-        return "orders/create";
+        return "/orders/create";
     }
 
-//    @PostMapping("/orders/create")
-//    public String createOrder(@ModelAttribute Order order){
-//        order.setId(order.getId());
-//
-//    }
+    @PostMapping("/orders/create")
+    public String createOrder(@PathVariable long id,
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "total_price") double total_price
+    ){
+        Order order = orderDao.findAllById(id);
+        order.setEmail(email);
+        order.setTotal_price(total_price);
+        return "/orders/create";
+    }
 
-//    @GetMapping("/orders/{id}"){
-//
-//}
+    @GetMapping("/orders/{id}")
+    public String ShowOneOrder(@PathVariable long id, Model model){
+        model.addAttribute("singleOrder", orderDao.findAllById(id));
+        return "/orders/show";
+    }
 
-//    @GetMapping("/orders/{id}/update"){
-//
-//}
+    /* I've been trying to run the application and i keep getting the same error:
+    Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+     2021-07-08 08:30:44.509 ERROR 4811 --- [main] o.s.boot.SpringApplication: Application run failed
 
-//    @PostMapping("/orders/{id}/update"){
-//
-//    }
+     ** I can't see my progress because of this **
+     */
+
+
+
+    /* i need help knowing how to make Updates here */
+//    @GetMapping("/orders/{id}/update")
+
+//    @PostMapping("/orders/{id}/update")
+
+
 
     @PostMapping("/orders/{id}/delete")
-    public String ddeleteOrder(@PathVariable long id){
+    public String deleteOrder(@PathVariable long id){
         orderDao.deleteById(id);
-        return "redirect:/orders";
+        return "redirect:/orders/show";
     }
 
 }
